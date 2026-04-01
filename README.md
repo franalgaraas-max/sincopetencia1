@@ -486,23 +486,22 @@
 
 <script>
     // =======================================================
-    // 1. IMÁGENES DESDE GOOGLE DRIVE (IDs reales)
+    // 1. IMÁGENES DESDE IMGUR (ENLACES DIRECTOS)
     // =======================================================
-    // IDs de las imágenes de tu carpeta:
-    // IMG-20260401-WA0004.jpg, IMG-20260401-WA0005.jpg, etc.
-    const imagenesIDs = [
-        "1vBsc1ZJs07-0HGF1HxNAQpIjBg87Sk-a",  // IMG-20260401-WA0004.jpg
-        "1nNWHN-hiKb5N7adxogBSWYvyD6v-E4Pc",  // IMG-20260401-WA0005.jpg
-        "1rFv0oF01t0m6WTR2uy4UDSK4yaZvyNU-",  // IMG-20260401-WA0006.jpg
-        "1eOj-_vIDHGWCFxc-6wtjKzCb3EQ9K6Z3",  // IMG-20260401-WA0007.jpg
-        "1mv7bYJ4I_YenHmJxR44jPCn05J6ZP_7S",  // IMG-20260401-WA0008.jpg
-        "1dovbOJvSCL9uZh5ZcXDcPzQ_-kU7P7Q1",  // IMG-20260401-WA0009.jpg
-        "13P--boXVqZQxLbZ3M66RBDyV6mnAUOhb"   // IMG-20260401-WA0010.jpg
+    // Los IDs que me pasaste convertidos a enlaces directos
+    const imagenesURLs = [
+        "https://i.imgur.com/iGfBzB2.jpg",   // IMG-20260401-WA0004.jpg
+        "https://i.imgur.com/a47TrxZ.jpg",   // IMG-20260401-WA0005.jpg
+        "https://i.imgur.com/Dhud1EV.jpg",   // IMG-20260401-WA0006.jpg
+        "https://i.imgur.com/B1N2dAl.jpg",   // IMG-20260401-WA0007.jpg
+        "https://i.imgur.com/f3cDV4U.jpg",   // IMG-20260401-WA0008.jpg
+        "https://i.imgur.com/ePtHvTu.jpg",   // IMG-20260401-WA0009.jpg
+        "https://i.imgur.com/dy1qGnF.jpg"    // IMG-20260401-WA0010.jpg
     ];
     
-    function getImagenURL(id) {
-        if (id) {
-            return `https://drive.google.com/uc?export=view&id=${id}`;
+    function getImagenURL(index) {
+        if (index >= 0 && index < imagenesURLs.length) {
+            return imagenesURLs[index];
         }
         return null;
     }
@@ -526,17 +525,17 @@
     for (let i = 1; i <= 100; i++) {
         let equipo = equiposBase[(i-1) % equiposBase.length];
         let nombre = `Remera ${equipo}`;
-        let imagenID = null;
-        // Asigno las 7 imágenes a los primeros 7 productos (Platense, Estudiantes, Chicago, etc)
-        if (i <= imagenesIDs.length) {
-            imagenID = imagenesIDs[i-1];
+        let imagenURL = null;
+        // Asigno las 7 imágenes a los primeros 7 productos
+        if (i <= imagenesURLs.length) {
+            imagenURL = imagenesURLs[i-1];
         }
         productos.push({
             id: i,
             nombre: nombre,
             precio: PRECIO_UNITARIO,
             talles: TALLES,
-            imagenID: imagenID
+            imagenURL: imagenURL
         });
     }
     
@@ -580,7 +579,7 @@
                 precio: producto.precio,
                 cantidad: 1,
                 talles: producto.talles,
-                imagenID: producto.imagenID
+                imagenURL: producto.imagenURL
             });
         }
         guardarCarrito();
@@ -647,12 +646,11 @@
             const card = document.createElement('div');
             card.className = 'product-card';
             
-            const imgUrl = getImagenURL(prod.imagenID);
             let imagenStyle = '';
             let imagenContent = '';
             
-            if (imgUrl) {
-                imagenStyle = `style="background-image: url('${imgUrl}');"`;
+            if (prod.imagenURL) {
+                imagenStyle = `style="background-image: url('${prod.imagenURL}');"`;
                 imagenContent = '';
             } else {
                 const colorFondo = `hsl(${prod.id * 37 % 360}, 70%, 55%)`;
